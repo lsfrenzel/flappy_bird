@@ -39,17 +39,24 @@ function preload() {
   this.load.image('bg', 'bg.jpg');
   this.load.image('bird', 'bird.png');
   this.load.image('pipe', 'pipe.png');
+  this.load.audio('bgMusic', 'Flaming Soul Loop.ogg');
 }
 
 let bird, pipes, score = 0, scoreText, isGameOver = false;
 let gameOverText, ground;
 let pipeSpeed = -200;
-let gapSize = 300;
+let gapSize = 220;
 let difficultyLevel = 1;
 let ranking = JSON.parse(localStorage.getItem('ranking')) || [];
 
 function create() {
   this.add.image(gameWidth / 2, gameHeight / 2, 'bg').setDisplaySize(gameWidth, gameHeight);
+
+  this.bgMusic = this.sound.add('bgMusic', {
+    loop: true,
+    volume: 0.5
+  });
+  this.bgMusic.play();
 
   bird = this.physics.add.sprite(gameWidth / 4, gameHeight / 2, 'bird').setScale(0.5);
   bird.setCollideWorldBounds(true);
@@ -129,6 +136,8 @@ function checkDifficultyIncrease() {
 function hitPipe() {
   if (isGameOver) return;
   isGameOver = true;
+
+  if (this.bgMusic) this.bgMusic.stop();
 
   pipes.setVelocityX(0);
   bird.setTint(0xff0000);
